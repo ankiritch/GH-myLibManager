@@ -40,5 +40,5 @@ myLibManager.import = function(libPath)
 	self.shell.launch(libPath, libKey)
 	libObj = get_custom_object[libKey]
 	get_custom_object.remove(libKey)
-	return 
+	return libObj
 end function
