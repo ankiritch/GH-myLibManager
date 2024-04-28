@@ -1,6 +1,6 @@
 # Create library
 
-- create an object containing your function references: {key: @functionReference}
+- create an object containing your functions
 - include the code of this library in your file: Paste it or import_code(pathToMyLibManager)
 - export the object with myLibManager.export(obj)
 
