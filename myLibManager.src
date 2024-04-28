@@ -1,0 +1,44 @@
+myLibManager = {}
+myLibManager.print = @print
+myLibManager.shell = get_shell
+
+myLibManager.randInt = function(len=10)
+	myInt = ""
+	for i in range(0, len-1)
+		myInt = myInt + floor(rnd()*10)
+	end for
+
+	return myInt
+end function
+
+myLibManager.getNewKey = function(usedKeys)
+	if usedKeys.indexOf("myLibManager") == null then
+		return "myLibManager"
+	end if
+
+	newKey = self.randInt()
+	if usedKeys.indexOf(newKey) == null  then
+		return newKey
+	else 
+		return self.getNewKey(usedKeys)
+	end if
+	
+end function
+
+myLibManager.export = function(functions)
+	if typeof(functions) == typeof({}) then
+		get_custom_object[params[0]] = functions
+	else
+		self.print("Export Failed, type not Map")
+	end if
+end function
+
+myLibManager.import = function(libPath)
+	customObjectKeys = get_custom_object.indexes
+	libKey = self.getNewKey(customObjectKeys)
+	get_custom_object[libKey] = {}
+	self.shell.launch(libPath, libKey)
+	libObj = get_custom_object[libKey]
+	get_custom_object.remove(libKey)
+	return 
+end function
