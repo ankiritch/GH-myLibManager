@@ -42,3 +42,45 @@ myLibManager.import = function(libPath)
 	get_custom_object.remove(libKey)
 	return libObj
 end function
+
+myLibManager.rsExecute = function(func, args=[], env={}, rmFile=true, fPath=self.current_path) //restricted scope
+	//create file
+	fileName = self.getNewKey(self.shell.host_computer.File(fPath).get_files()) + ".src"
+	self.shell.host_computer.touch(fPath, fileName)
+	rsFile = self.shell.host_computer.File(fPath + "/" +fileName)
+	//create custom object
+	key = self.getNewKey(get_custom_object.indexes)
+	get_custom_object[key] = {}
+
+	//set content and object
+	content = ""
+	for envVar in env.indexes
+		get_custom_object[key][envVar] = env[envVar]
+		content = content + envVar + "=get_custom_object[""" + key + """][""" + envVar + """]" + char(10)
+	end for
+	
+	funcKey = self.getNewKey(get_custom_object[key].indexes)
+	get_custom_object[key][funcKey] = @func
+	returnKey = self.getNewKey(get_custom_object[key].indexes)
+	get_custom_object[key].push(returnKey)
+	argKey = self.getNewKey(get_custom_object[key].indexes)
+	get_custom_object[key][argKey] = args
+	
+	//function exection line
+	content = content + "TOEXECUTE=@get_custom_object[""" + key + """]["""+ funcKey +"""]" + char(10)
+	content = content + "get_custom_object[""" + key +"""][""" + returnKey + """]="
+	content = content + "TOEXECUTE("
+	if args.len !=0 then
+		for i in range(0, get_custom_object[key][argKey].len - 1)
+			content = content + "get_custom_object[""" +key+ """][""" +argKey+ """][" +i+ "]" + ","
+		end for
+		content = content[:-1]
+	end if
+	content = content + ")" + char(10)
+	
+	rsFile.set_content(content)
+	self.shell.build(current_path + "/" + fileName, current_path)
+	rsFile.delete()
+	self.shell.launch(current_path + "/" + fileName[:-4])
+	self.shell.host_computer.File(current_path + "/" + fileName[:-4]).delete()
+end function
