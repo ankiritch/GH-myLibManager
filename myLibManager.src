@@ -58,7 +58,9 @@ myLibManager.import = function(libPath)
 	return libObj
 end function
 
-myLibManager.rsExecute = function(func, args=[], env={}, rmFile=true, fPath="") //restricted scope
+myLibManager.rsExecute = function(func, args=[], env={}, disabled=[], rmFile=true, fPath="") //restricted scope
+	if typeof(args) != "list" then args = [args]
+	if typeof(disabled) != "list" then disabled = [disabled]
 	if not fPath then fPath = self.current_path
 	//create file
 	fileName = self.getNewKey(self.shell.host_computer.File(fPath).get_files()) + ".src"
@@ -74,9 +76,14 @@ myLibManager.rsExecute = function(func, args=[], env={}, rmFile=true, fPath="") 
 	get_custom_object[key] = {}
 
 	usedNames = []
-
-	//set content and object
+	
+	//disable built-in objects
 	content = ""
+	for objName in disabled
+		content = content + "globals[""" + objName + """]=null" + char(10)
+	end for
+
+	//add variables
 	for envVar in env.indexes
 		get_custom_object[key][envVar] = env[envVar]
 		content = content + envVar + "=get_custom_object[""" + key + """][""" + envVar + """]" + char(10)
