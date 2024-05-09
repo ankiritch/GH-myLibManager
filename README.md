@@ -26,3 +26,30 @@ import_code("/lib/myLibManager")
 myCustomLibrary = myLibManager.import("/lib/myCustomLibrary")
 myCustomLibrary.echo("Hello World")
 ```
+
+# Restricted scope execution
+
+Execute a function while restricting program variable access
+
+example:
+```
+import_code("/lib/myLibManager")
+
+globalVar = "Hello World"
+
+echo = function(str, otherStr)
+  print(str)
+  print(globalVar)
+  return otherStr
+end function
+
+a = myLibManager.rsExecute(@echo, ["toPrint", "toReturn"], {"globalVar": globalVar}, true, current_path)
+print(a)
+```
+
+example output
+```
+toPrint
+Hello World
+toReturn
+```
