@@ -12,9 +12,9 @@ myLibManager.randInt = function(len=10)
 end function
 
 myLibManager.getNewKey = function(usedKeys)
-	if usedKeys.indexOf("myLibManager") == null then
-		return "myLibManager"
-	end if
+	//if usedKeys.indexOf("myLibManager") == null then
+	//	return "myLibManager"
+	//end if
 
 	newKey = self.randInt()
 	if usedKeys.indexOf(newKey) == null  then
