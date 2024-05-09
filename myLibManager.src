@@ -93,5 +93,9 @@ myLibManager.rsExecute = function(func, args=[], env={}, rmFile=true, fPath=self
 		self.shell.host_computer.File(current_path + "/" + fileName[:-4]).delete()
 	end if
 
-	return get_custom_object[key][returnKey]
+	//clear custom object
+	toReturn = get_custom_object[key][returnKey]
+	get_custom_object.remove(key)
+
+	return toReturn
 end function
