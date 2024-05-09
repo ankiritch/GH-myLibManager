@@ -43,7 +43,8 @@ myLibManager.import = function(libPath)
 	return libObj
 end function
 
-myLibManager.rsExecute = function(func, args=[], env={}, rmFile=true, fPath=self.current_path) //restricted scope
+myLibManager.rsExecute = function(func, args=[], env={}, rmFile=true, fPath="") //restricted scope
+	if not fPath then fPath = self.current_path
 	//create file
 	fileName = self.getNewKey(self.shell.host_computer.File(fPath).get_files()) + ".src"
 	self.shell.host_computer.touch(fPath, fileName)
@@ -93,9 +94,5 @@ myLibManager.rsExecute = function(func, args=[], env={}, rmFile=true, fPath=self
 		self.shell.host_computer.File(current_path + "/" + fileName[:-4]).delete()
 	end if
 
-	//clear custom object
-	toReturn = get_custom_object[key][returnKey]
-	get_custom_object.remove(key)
-
-	return toReturn
+	return get_custom_object[key][returnKey]
 end function
