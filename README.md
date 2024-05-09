@@ -30,6 +30,10 @@ myCustomLibrary.echo("Hello World")
 # Restricted scope execution
 
 Execute a function while restricting program variable access
+use:
+```
+myLibManager.rsExecute(<reference:function>, <(optional) list:arguments>, <(optional) map:global variables>, <(optional) list:disabled built-in objects>, <(optional) bool:remove created files>, <(optional) str:path for created files>)
+```
 
 example:
 ```
