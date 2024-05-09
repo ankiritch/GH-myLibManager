@@ -1,6 +1,7 @@
 myLibManager = {}
 myLibManager.print = @print
 myLibManager.shell = get_shell
+myLibManager.current_path = current_path
 
 myLibManager.randInt = function(len=10)
 	myInt = ""
@@ -11,16 +12,30 @@ myLibManager.randInt = function(len=10)
 	return myInt
 end function
 
-myLibManager.getNewKey = function(usedKeys)
-	//if usedKeys.indexOf("myLibManager") == null then
-	//	return "myLibManager"
-	//end if
+myLibManager.randStr = function(len=10)
+	alphabet = "abcdefghijklmnopqrstuvwxyz"
 
-	newKey = self.randInt()
+	myStr = ""
+	for i in range(0, len-1)
+		rInt = floor(rnd()*100)
+		while rInt > 25
+			rInt = rInt - 26
+		end while
+		
+		myStr = myStr + alphabet[rInt]
+	end for
+
+	return myStr
+end function
+
+myLibManager.getNewKey = function(usedKeys, str=true)
+
+	if str then newKey = self.randStr()
+	if not str then newKey = self.randInt()
 	if usedKeys.indexOf(newKey) == null  then
 		return newKey
 	else 
-		return self.getNewKey(usedKeys)
+		return self.getNewKey(usedKeys, str)
 	end if
 	
 end function
@@ -49,6 +64,11 @@ myLibManager.rsExecute = function(func, args=[], env={}, rmFile=true, fPath="") 
 	fileName = self.getNewKey(self.shell.host_computer.File(fPath).get_files()) + ".src"
 	self.shell.host_computer.touch(fPath, fileName)
 	rsFile = self.shell.host_computer.File(fPath + "/" +fileName)
+	
+	if rsFile == null then
+		print("No permssions in: " + fPath)
+		return -1
+	end if
 	//create custom object
 	key = self.getNewKey(get_custom_object.indexes)
 	get_custom_object[key] = {}
@@ -86,7 +106,10 @@ myLibManager.rsExecute = function(func, args=[], env={}, rmFile=true, fPath="") 
 
 	//run and delete files
 	rsFile.set_content(content)
-	self.shell.build(current_path + "/" + fileName, current_path)
+	if self.shell.build(current_path + "/" + fileName, current_path) != "" then
+		print("Build Error: " + self.shell.build(current_path + "/" + fileName, current_path))
+		return -1
+	end if
 	self.shell.launch(current_path + "/" + fileName[:-4])
 
 	if rmFile == true then
