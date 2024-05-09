@@ -29,6 +29,8 @@ myCustomLibrary.echo("Hello World")
 
 # Restricted scope execution
 
+WARNING!: restriction of built-in objects is an experimental feature, do not rely on it
+
 Execute a function while restricting program variable access
 use:
 ```
