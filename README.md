@@ -43,7 +43,7 @@ echo = function(str, otherStr)
   return otherStr
 end function
 
-a = myLibManager.rsExecute(@echo, ["toPrint", "toReturn"], {"globalVar": globalVar}, true, current_path)
+a = myLibManager.rsExecute(@echo, ["toPrint", "toReturn"], {"globalVar": globalVar})
 print(a)
 ```
 
