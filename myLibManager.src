@@ -49,7 +49,7 @@ myLibManager.export = function(functions)
 end function
 
 myLibManager.import = function(libPath)
-	customObjectKeys = get_custom_object.indexes
+	customObjectKeys = indexes(get_custom_object)
 	libKey = self.getNewKey(customObjectKeys)
 	get_custom_object[libKey] = {}
 	self.shell.launch(libPath, libKey)
@@ -72,7 +72,7 @@ myLibManager.rsExecute = function(func, args=[], env={}, disabled=[], rmFile=tru
 		return -1
 	end if
 	//create custom object
-	key = self.getNewKey(get_custom_object.indexes)
+	key = self.getNewKey(indexes(get_custom_object))
 	get_custom_object[key] = {}
 
 	usedNames = []
